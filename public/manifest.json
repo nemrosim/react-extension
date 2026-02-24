@@ -7,7 +7,7 @@
     "default_popup": "index.html",
     "default_title": "Open Extension"
   },
-  "permissions": ["scripting", "activeTab"],
+  "permissions": ["scripting", "activeTab", "downloads"],
   "icons": {
     "16": "logo.png",
     "48": "logo.png",
