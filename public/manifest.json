@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "My React Extension",
+  "version": "1.0.0",
+  "description": "A simple React extension created with Vite",
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Open Extension"
+  },
+  "icons": {
+    "16": "logo.png",
+    "48": "logo.png",
+    "128": "logo.png"
+  }
+}
