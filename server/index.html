@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,7 +28,7 @@
             background: white;
             border-radius: 20px;
             padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
         h1 {
@@ -197,6 +198,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>🎥 Video Downloader</h1>
@@ -215,6 +217,23 @@
 
     <script>
         const downloads = new Map();
+
+        // Check for ?id URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const autoId = urlParams.get('id');
+
+        if (autoId) {
+            // Hide the form if we are directly tracking an ID
+            document.querySelector('.download-form').style.display = 'none';
+            downloads.set(autoId, {
+                id: autoId,
+                url: 'Loading...',
+                status: 'starting',
+                progress: 0
+            });
+            renderDownloads();
+            startPolling(autoId);
+        }
 
         async function startDownload() {
             const urlInput = document.getElementById('urlInput');
@@ -263,6 +282,9 @@
                     const response = await fetch(`http://localhost:3000/download/${downloadId}`);
 
                     if (!response.ok) {
+                        if (response.status === 404 && autoId) {
+                            document.getElementById('downloadsList').innerHTML = '<div class="error-message">Download tracking ID not found on server.</div>';
+                        }
                         clearInterval(interval);
                         return;
                     }
@@ -277,9 +299,9 @@
 
                 } catch (error) {
                     console.error('Polling error:', error);
-                    clearInterval(interval);
+                    // Don't clear interval on network error, server might be restarting
                 }
-            }, 500);
+            }, 1000); // Polling every 1 second
         }
 
         function renderDownloads() {
@@ -304,26 +326,60 @@
 
                     <div class="progress-bar-container">
                         <div class="progress-bar" style="width: ${download.progress}%"></div>
-                        <div class="progress-text">${download.progress.toFixed(1)}%</div>
+                        <div class="progress-text">${typeof download.progress === 'number' ? download.progress.toFixed(1) : 0}%</div>
                     </div>
 
+                    ${download.status === 'downloading' ? `
+                      <div style="margin-top: 10px; font-size: 13px; color: #555; display: flex; justify-content: space-between; align-items: center; background: #f0f0f0; padding: 10px; border-radius: 5px;">
+                          <div>
+                              <strong>Speed:</strong> <span style="font-family: monospace;">${download.speed || 'Calculating...'}</span>
+                          </div>
+                          <div>
+                              <strong>ETA:</strong> <span style="font-family: monospace;">${download.eta || 'Calculating...'}</span>
+                          </div>
+                          ${download.fragTotal ? `
+                          <div>
+                              <strong>Fragments:</strong> <span style="font-family: monospace;">${download.fragDownloaded} / ${download.fragTotal}</span>
+                          </div>
+                          ` : ''}
+                      </div>
+                    ` : ''}
+
                     ${download.error ? `<div class="error-message">${escapeHtml(download.error)}</div>` : ''}
+
+                    ${download.status === 'completed' && download.files && download.files.length > 0 ? `
+                        <div style="margin-top: 20px;">
+                            <strong>Ready to Download:</strong>
+                            <div style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                                ${download.files.map(file => `
+                                    <a href="${file}" download class="download-button" style="text-decoration: none; padding: 10px 15px; background: #28a745; color: white; border-radius: 5px; font-weight: bold; font-size: 14px; transition: 0.2s;">
+                                        ⬇️ Download ${file.substring(file.lastIndexOf('/') + 1)}
+                                    </a>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
                 </div>
             `).join('');
         }
 
         function escapeHtml(text) {
+            if (!text) return '';
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
 
         // Allow Enter key to submit
-        document.getElementById('urlInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                startDownload();
-            }
-        });
+        const urlInput = document.getElementById('urlInput');
+        if (urlInput) {
+            urlInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    startDownload();
+                }
+            });
+        }
     </script>
 </body>
+
 </html>

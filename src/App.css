@@ -1,43 +1,89 @@
 #root {
-  min-width: 600px;
-  max-width: 1280px;
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+  padding: 1rem;
+  text-align: left;
 }
 
 .card {
-  padding: 2em;
+  padding: 1rem;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .read-the-docs {
   color: #888;
+}
+
+.refresh-container {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.refresh-btn {
+  background: rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  color: #667eea;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0;
+  position: relative;
+}
+
+.refresh-btn:hover {
+  background: #667eea;
+  color: white;
+  transform: rotate(180deg);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  border-color: #667eea;
+}
+
+.refresh-btn:active {
+  transform: rotate(180deg) scale(0.9);
+}
+
+.tooltip {
+  position: absolute;
+  top: 42px;
+  right: 0;
+  background: #2d3748;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.2s ease-out;
+  white-space: nowrap;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.tooltip::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  right: 14px;
+  width: 8px;
+  height: 8px;
+  background: #2d3748;
+  transform: rotate(45deg);
+}
+
+.refresh-btn:hover .tooltip {
+  opacity: 1;
+  transform: translateY(0);
 }

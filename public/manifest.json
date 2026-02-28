@@ -4,13 +4,21 @@
   "version": "1.0.0",
   "description": "Extract 1080p video URLs from streaming sites",
   "action": {
-    "default_popup": "index.html",
     "default_title": "Video Downloader"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "index.html"
   },
   "permissions": [
     "scripting",
     "activeTab",
-    "downloads"
+    "downloads",
+    "sidePanel",
+    "webRequest",
+    "storage"
   ],
   "host_permissions": [
     "<all_urls>"
