@@ -1,13 +1,20 @@
 {
   "manifest_version": 3,
-  "name": "My React Extension",
+  "name": "Video Downloader",
   "version": "1.0.0",
-  "description": "A simple React extension created with Vite",
+  "description": "Extract 1080p video URLs from streaming sites",
   "action": {
     "default_popup": "index.html",
-    "default_title": "Open Extension"
+    "default_title": "Video Downloader"
   },
-  "permissions": ["scripting", "activeTab", "downloads"],
+  "permissions": [
+    "scripting",
+    "activeTab",
+    "downloads"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "icons": {
     "16": "logo.png",
     "48": "logo.png",
